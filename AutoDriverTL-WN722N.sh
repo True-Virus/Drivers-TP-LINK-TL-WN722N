@@ -20,58 +20,39 @@ function ctrl_c(){
 
 # Main Functions
 #-----------------------------------------------------------------------------------------------------------------
-function dependencias {
-	echo -e "\n${yellowColour}[*]${endColour}${grayColour} INSTALANDO DEPENDENCIAS... ${endColour}"; sleep 2
+function Actualizacion {
+	echo -e "\n${yellowColour}[*]${endColour}${grayColour} PREPARANDO ALGUNAS COSAS... ${endColour}"; sleep 2
 	sudo apt update
-	sudo apt install bc
-	sudo rmmod r8188eu.ko
-	echo -e "\n${yellowColour}[*]${endColour}${grayColour} DEPENCIAS COMPLETAS ${endColour}"; sleep 3
+	sudo parrot-upgrade
+	echo -e "\n${yellowColour}[*]${endColour}${grayColour} COMPLETADO ${endColour}"; sleep 3
 }
 #-----------------------------------------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------------------------------------------
 function carpeta {
 	echo -e "\n${yellowColour}[*]${endColour}${grayColour} DESCARGANDO ARCHIVOS NECESARIOS... ${endColour}"; sleep 2
-	echo -e "\n${yellowColour}[*]${endColour}${grayColour} Tiene Una Carpeta Que se llama rtl8188eus? ${endColour}"
-        echo -e "${yellowColour}[1]${endColour}${grayColour} Si ${endColour}"
-        echo -e "${yellowColour}[2]${endColour}${grayColour} No ${endColour}"
-        echo -n -e "${yellowColour}[*]${endColour} ${grayColour}Seleccione una opcion: ${endColour}"
-        read seleccion
-        if [ $seleccion = 1 ]; then
-                echo -e "\n${yellowColour}[*]${endColour}${grayColour} ELIMANDO CARPETA... ${endColour}"; sleep 2
-                rm -r -v rtl8188eus
-                clear
-                echo -e "\n${yellowColour}[*]${endColour}${grayColour} DESCARGANDO NUEVA CARPETA... ${endColour}"
+				sudo apt install bc
                 git clone https://github.com/aircrack-ng/rtl8188eus
-        elif [ $seleccion = 2 ]; then
-                git clone https://github.com/aircrack-ng/rtl8188eus
-        else :
-                echo -e "${redColour} Elije una opcion permitida ${endColour}"
-        fi
 }
 #-----------------------------------------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------------------------------------------
 function install_drivers {
 	echo -e  "\n${yellowColour}[*]${endColour}${grayColour} INSTALANDO DRIVERS... ${endColour}"; sleep 2
-	echo -e "\n${yellowColour}[*]${endColour}${grayColour} ESCRIBE : EXIT... ${endColour}"; sleep 1
+	echo 'blacklist r8188eu'|sudo tee -a '/etc/modprobe.d/realtek.conf'; sleep 3
 	cd rtl8188eus
-	sudo -i
-	echo "blacklist r8188eu" > "/etc/modprobe.d/realtek.conf"; sleep 3
-	sudo exit
-	make
-	make install
-	modprobe 8188eu
+	make && sudo make install
 	echo -e "\n${yellowColour}[*]${endColour}${grayColour} DRIVERS INSTALADOS... ${endColour}"; sleep 1
+	echo -e "\n${yellowColour}[*]${endColour}${grayColour} SOLO FALTA REINICIAR EL PC... ${endColour}"
 }
 #-----------------------------------------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------------------------------------------
 # Main Program
 
-dependencias
+Actualizacion
 clear
-carpeta
+Archivos
 clear
 install_drivers
 
